@@ -1,0 +1,13 @@
+nom,taux_interet,fiscalite,duree_min,versement_max
+Livret A,0.024,0.0,0,22950
+LDDS,0.024,0.0,0,12000
+LEP,0.035,0.0,0,7700
+PEL (2025),0.0175,0.30,4,61200
+Assurance Vie – euros,0.025,0.172,8,150000
+Assurance Vie – UC Risque faible,0.035,0.172,8,200000
+Assurance Vie – UC Risque modéré,0.045,0.172,8,200000
+PEA – profil prudent,0.045,0.172,5,150000
+PEA – profil équilibré,0.06,0.172,5,150000
+PEA – profil dynamique,0.08,0.172,5,150000
+SCPI Iroko Zen,0.071,0.30,5,None
+SCPI Sofidynamic,0.095,0.30,5,None

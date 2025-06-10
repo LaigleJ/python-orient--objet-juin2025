@@ -1,39 +1,62 @@
+# main.py
 
 from src.mon_module.models.personne import Personne
 from src.mon_module.models.epargne import Epargne
-from src.mon_module.utils import calcul_interets_composes # <-- Nouvelle importation
+from src.mon_module.utils import calcul_interets_composes
+from src.mon_module.data_manager import importer_donnees, creer_objets_personne_depuis_df, creer_objets_epargne_depuis_df
 
 # --- Tests des classes Personne et Epargne (vos tests précédents) ---
-print("\n" + "="*50 + "\n") # Séparateur pour la lisibilité
+# ... (laissez le code de test des classes Personne et Epargne ici)
+print("\n" + "="*50 + "\n")
 
-# --- Tests de la fonction calcul_interets_composes ---
+# --- Tests de la fonction calcul_interets_composes (vos tests précédents) ---
+# ... (laissez le code de test de calcul_interets_composes ici)
+print("\n" + "="*50 + "\n")
 
-print("--- Tests de calcul_interets_composes ---")
+# --- Tests des fonctions d'importation et de création d'objets ---
+print("--- Tests d'importation et création d'objets ---")
 
-# Exemple 1: Versement annuel de 1000€, taux 5%, durée 1 an
-resultat1 = calcul_interets_composes(1000, 0.05, 1)
-print(f"Exemple 1 (1000€/an, 5%, 1 an): {resultat1:.2f} €") 
+# Assurez-vous que ces fichiers existent dans votre dossier 'mon_projet/' (ou adaptez le chemin)
+CHEMIN_PERSONNES_CSV = "personnes.csv"
+CHEMIN_EPARGNE_CSV = "epargnes.csv"
 
-# Exemple 2: Versement annuel de 100€, taux 10%, durée 2 ans
-resultat2 = calcul_interets_composes(100, 0.10, 2)
-print(f"Exemple 2 (100€/an, 10%, 2 ans): {resultat2:.2f} €") 
-
-# Exemple 3: Versement annuel de 0€, taux 5%, durée 5 ans (pas d'épargne)
-resultat3 = calcul_interets_composes(0, 0.05, 5)
-print(f"Exemple 3 (0€/an, 5%, 5 ans): {resultat3:.2f} €") 
-
-# Exemple 4: Tests de validation (vérifier les erreurs)
+# Créer des fichiers CSV temporaires pour le test si vous n'en avez pas encore
+# REMARQUE : retirez ou commentez ce bloc une fois que vous avez vos vrais fichiers
 try:
-    calcul_interets_composes(100, 0.05, -1)
-except ValueError as e:
-    print(f"Erreur attendue pour durée négative: {e}")
-
-try:
-    calcul_interets_composes(100, -0.05, 1)
-except ValueError as e:
-    print(f"Erreur attendue pour taux négatif: {e}")
+    with open(CHEMIN_PERSONNES_CSV, 'w') as f:
+        f.write("nom,age,revenu_annuel,loyer,depenses_mensuelles,versement_mensuel_utilisateur\n")
+        f.write("Jean,30,35000,700,400,\n")
+        f.write("Marie,45,50000,900,600,1000\n")
+        f.write("Pierre,25,25000,500,300,None\n") # Test avec "None" pour l'optionnel
+except FileExistsError:
+    pass # Le fichier existe déjà, on ne le recrée pas
 
 try:
-    calcul_interets_composes(-100, 0.05, 1)
-except ValueError as e:
-    print(f"Erreur attendue pour versement négatif: {e}")
+    with open(CHEMIN_EPARGNE_CSV, 'w') as f:
+        f.write("nom,taux_interet,fiscalite,duree_min,versement_max\n")
+        f.write("Livret A,0.03,0,0,22950\n")
+        f.write("LDDS,0.03,0,0,12000\n")
+        f.write("PEL,0.025,0.30,48,61200\n")
+        f.write("Assurance Vie,0.045,0.172,96,\n") # Test avec absence de plafond
+        f.write("Produit Fisc,0.02,30%,12,None\n") # Test avec pourcentage et "None"
+except FileExistsError:
+    pass # Le fichier existe déjà, on ne le recrée pas
+# FIN DU BLOC TEMPORAIRE
+
+try:
+    print(f"\nImportation des données de {CHEMIN_PERSONNES_CSV} :")
+    df_personnes = importer_donnees(CHEMIN_PERSONNES_CSV)
+    personnes_objets = creer_objets_personne_depuis_df(df_personnes)
+    for p in personnes_objets:
+        print(p)
+    print(f"Nombre de personnes importées : {len(personnes_objets)}")
+
+    print(f"\nImportation des données de {CHEMIN_EPARGNE_CSV} :")
+    df_epargnes = importer_donnees(CHEMIN_EPARGNE_CSV)
+    epargnes_objets = creer_objets_epargne_depuis_df(df_epargnes)
+    for e in epargnes_objets:
+        print(e)
+    print(f"Nombre de produits d'épargne importés : {len(epargnes_objets)}")
+
+except (FileNotFoundError, ValueError) as e:
+    print(f"Une erreur est survenue lors de l'importation : {e}")

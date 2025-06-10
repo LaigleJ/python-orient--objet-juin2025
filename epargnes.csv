@@ -1,0 +1,6 @@
+nom,taux_interet,fiscalite,duree_min,versement_max
+Livret A,0.03,0,0,22950
+LDDS,0.03,0,0,12000
+PEL,0.025,0.30,48,61200
+Assurance Vie,0.045,0.172,96,
+Produit Fisc,0.02,30%,12,None

@@ -1,6 +1,10 @@
+# src/mon_module/models/epargne.py
+
+import numpy as np # <-- NOUVELLE IMPORTATION
+
 class Epargne:
     def __init__(self, nom: str, taux_interet: float, fiscalite: float,
-                 duree_min: int, versement_max: float = None):
+                 duree_min: int, versement_max: float = np.nan): # <-- Changement du type par défaut à np.nan
         """
         Initialise une nouvelle instance de la classe Epargne.
 
@@ -9,7 +13,7 @@ class Epargne:
             taux_interet (float): Taux d'intérêt annuel du produit (ex: 0.03 pour 3%).
             fiscalite (float): Taux de fiscalité applicable aux gains (ex: 0.30 pour 30%).
             duree_min (int): Durée minimale de détention en mois.
-            versement_max (float, optional): Plafond de versement maximal du produit. None si pas de plafond.
+            versement_max (float, optional): Plafond de versement maximal du produit. Utilise np.nan si pas de plafond.
         """
         self.nom = nom
         self.taux_interet = taux_interet
@@ -21,7 +25,7 @@ class Epargne:
         """
         Fournit une représentation textuelle conviviale de l'objet Epargne.
         """
-        versement_max_str = f"{self.versement_max:.2f} €" if self.versement_max is not None else "Aucun"
+        versement_max_str = f"{self.versement_max:.2f} €" if not np.isnan(self.versement_max) else "Aucun"
         return (f"Produit d'épargne: {self.nom}\n"
                 f"  Taux d'intérêt: {self.taux_interet * 100:.2f} %\n"
                 f"  Fiscalité: {self.fiscalite * 100:.2f} %\n"

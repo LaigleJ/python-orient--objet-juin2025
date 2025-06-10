@@ -1,0 +1,4 @@
+nom,age,revenu_annuel,loyer,depenses_mensuelles,versement_mensuel_utilisateur
+Jean,30,35000,700,400,
+Marie,45,50000,900,600,1000
+Pierre,25,25000,500,300,None
