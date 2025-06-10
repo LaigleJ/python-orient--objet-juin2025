@@ -1,31 +1,31 @@
-nom,age,revenu_annuel,loyer,depenses_mensuelles,versement_mensuel_utilisateur
-Alice,22,21000,400,300,
-Bob,35,32000,800,500,
-Claire,28,28000,750,700,
-David,45,45000,1200,800,
-Emma,52,50000,1000,1200,
-Fabrice,65,25000,650,1000,
-Gina,31,38000,950,400,
-Henri,40,60000,2000,1500,
-Isabelle,37,22000,500,700,
-Julien,30,26000,700,600,
-Karim,55,35000,850,900,
-Laura,60,28000,600,400,
-Martin,29,41000,1100,850,
-Nora,25,24000,500,250,
-Oscar,42,39000,1300,950,
-Pauline,33,34000,800,750,
-Quentin,48,56000,1800,1300,
-Rania,27,31000,750,600,
-Samuel,38,30000,700,650,
-Tina,70,22000,550,350,
-Ugo,19,20000,450,200,
-Valérie,77,23000,500,400,
-Wassim,36,42000,1000,850,
-Xena,44,46000,1200,1000,
-Yassine,68,26000,600,500,
-Zoé,24,29000,700,550,
-Abdel,58,52000,1400,1100,
-Brigitte,73,25000,600,450,
-Cédric,15,0,0,50,
-Diane,80,18000,400,350
+nom,age,revenu_annuel,loyer,depenses_mensuelles,objectif,duree_epargne,versement_mensuel_utilisateur
+Alice,22,21000,400,300,5000,24, # Objectif 5k sur 2 ans
+Bob,35,32000,800,500,10000,36, # Objectif 10k sur 3 ans
+Claire,28,28000,750,700,7500,18, # Objectif 7.5k sur 1.5 ans
+David,45,45000,1200,800,20000,60, # Objectif 20k sur 5 ans
+Emma,52,50000,1000,1200,30000,120, # Objectif 30k sur 10 ans
+Fabrice,65,25000,650,1000,0,0, # Pas d'objectif, pas de durée (pour tester ce cas)
+Gina,31,38000,950,400,12000,48, # Objectif 12k sur 4 ans
+Henri,40,60000,2000,1500,50000,180, # Objectif 50k sur 15 ans
+Isabelle,37,22000,500,700,3000,12, # Objectif 3k sur 1 an
+Julien,30,26000,700,600,6000,24, # Objectif 6k sur 2 ans
+Karim,55,35000,850,900,15000,72, # Objectif 15k sur 6 ans
+Laura,60,28000,600,400,8000,36, # Objectif 8k sur 3 ans
+Martin,29,41000,1100,850,18000,48, # Objectif 18k sur 4 ans
+Nora,25,24000,500,250,4000,12, # Objectif 4k sur 1 an
+Oscar,42,39000,1300,950,16000,60, # Objectif 16k sur 5 ans
+Pauline,33,34000,800,750,9000,30, # Objectif 9k sur 2.5 ans
+Quentin,48,56000,1800,1300,40000,120, # Objectif 40k sur 10 ans
+Rania,27,31000,750,600,7000,24, # Objectif 7k sur 2 ans
+Samuel,38,30000,700,650,8000,36, # Objectif 8k sur 3 ans
+Tina,70,22000,550,350,0,0, # Pas d'objectif, pas de durée
+Ugo,19,20000,450,200,2000,6, # Objectif 2k sur 6 mois
+Valérie,77,23000,500,400,0,0, # Pas d'objectif, pas de durée
+Wassim,36,42000,1000,850,22000,72, # Objectif 22k sur 6 ans
+Xena,44,46000,1200,1000,28000,96, # Objectif 28k sur 8 ans
+Yassine,68,26000,600,500,0,0, # Pas d'objectif, pas de durée
+Zoé,24,29000,700,550,5500,24, # Objectif 5.5k sur 2 ans
+Abdel,58,52000,1400,1100,35000,120, # Objectif 35k sur 10 ans
+Brigitte,73,25000,600,450,0,0, # Pas d'objectif, pas de durée
+Cédric,15,0,0,50,0,0, # Pas d'objectif, pas de durée
+Diane,80,18000,400,350,0,0 # Pas d'objectif, pas de durée

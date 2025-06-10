@@ -2,13 +2,14 @@
 import pandas as pd
 import os
 import logging 
+import numpy as np
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 from src.mon_module.models.personne import Personne
 from src.mon_module.models.epargne import Epargne
 from src.mon_module.data_cleaning import nettoyer_dataframe, nettoyer_nombre, nettoyer_taux
-
+from src.mon_module.models.resultat import ResultatEpargne
 
 def importer_donnees_dataframe(chemin_fichier: str) -> pd.DataFrame:
     """
@@ -65,16 +66,44 @@ def import_personnes(fichier: str) -> list[Personne]:
     try:
         df = importer_donnees_dataframe(fichier)
         df_nettoye = nettoyer_dataframe(df.copy()) # Applique le nettoyage
+
+        # --- DEBUGGING : Afficher le DataFrame nettoyé avant de créer les objets Personne ---
+        logging.info(f"Contenu du DataFrame nettoyé avant création des objets Personne:\n{df_nettoye.to_string()}")
+        # --- FIN DEBUGGING ---
+
         personnes = []
         for index, row in df_nettoye.iterrows():
             try:
+                # Récupérer l'objectif et la durée d'épargne avec .get() pour gérer les cas où la colonne pourrait manquer
+                # ou contenir des valeurs non numériques (bien que nettoyer_dataframe devrait gérer ça)
+                objectif = row.get('objectif', 0)  # Valeur par défaut 0 si colonne manquante
+                duree_epargne = row.get('duree_epargne', 0) # Valeur par défaut 0 si colonne manquante
+
+                # Convertir en int si ce n'est pas déjà fait (nettoyage devrait le faire)
+                # S'assurer que ce sont bien des nombres
+                try:
+                    objectif = float(objectif) # Utilisez float pour l'objectif
+                except (ValueError, TypeError):
+                    logging.warning(f"Objectif invalide pour {row['nom']} (ligne {index+2}). Défini à 0.")
+                    objectif = 0.0
+
+                try:
+                    duree_epargne = int(duree_epargne) # Utilisez int pour la durée
+                except (ValueError, TypeError):
+                    logging.warning(f"Durée d'épargne invalide pour {row['nom']} (ligne {index+2}). Défini à 0.")
+                    duree_epargne = 0
+
+
                 personne = Personne(
                     nom=row['nom'],
                     age=row['age'],
                     revenu_annuel=row['revenu_annuel'],
                     loyer=row['loyer'],
                     depenses_mensuelles=row['depenses_mensuelles'],
-                    
+                    # <<< AJOUTEZ CES LIGNES MAINTENANT >>>
+                    objectif=objectif,
+                    duree_epargne=duree_epargne,
+                    # <<< FIN DES AJOUTS >>>
                     versement_mensuel_utilisateur=row.get('versement_mensuel_utilisateur') # .get() pour np.nan
                 )
                 personnes.append(personne)
@@ -199,3 +228,34 @@ def save_epargnes(epargnes: list[Epargne], fichier: str):
     except Exception as e:
         logging.error(f"Échec de l'exportation des produits d'épargne vers '{fichier}' : {e}")
         raise
+
+# Ajoutez cette fonction à votre fichier data_manager.py
+def save_resultats_simulation(resultats: list[ResultatEpargne], chemin_fichier: str):
+    """
+    Exporte une liste de ResultatEpargne vers un fichier CSV ou Excel.
+
+    Args:
+        resultats (list[ResultatEpargne]): La liste des objets ResultatEpargne à exporter.
+        chemin_fichier (str): Le chemin complet du fichier de destination (ex: 'simulations.csv', 'simulations.xlsx').
+    """
+    logging.info(f"Début de l'exportation des résultats de simulation vers '{chemin_fichier}'.")
+
+    if not resultats:
+        logging.warning("Aucun résultat de simulation à exporter. Le fichier ne sera pas créé.")
+        return
+
+    # Convertir chaque ResultatEpargne en DataFrame et les concaténer
+    try:
+        df_results = pd.concat([res.to_dataframe() for res in resultats], ignore_index=True)
+
+        if chemin_fichier.endswith('.csv'):
+            df_results.to_csv(chemin_fichier, index=False, sep=',')
+            logging.info(f"{len(resultats)} résultats de simulation exportés avec succès vers '{chemin_fichier}'.")
+        elif chemin_fichier.endswith('.xlsx'):
+            df_results.to_excel(chemin_fichier, index=False)
+            logging.info(f"{len(resultats)} résultats de simulation exportés avec succès vers '{chemin_fichier}'.")
+        else:
+            logging.error(f"Format de fichier non supporté pour l'exportation des résultats : '{chemin_fichier}'. Utilisez '.csv' ou '.xlsx'.")
+
+    except Exception as e:
+        logging.error(f"Erreur lors de l'exportation des résultats de simulation vers '{chemin_fichier}' : {e}", exc_info=True)
