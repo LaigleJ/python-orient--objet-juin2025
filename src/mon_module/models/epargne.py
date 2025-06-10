@@ -1,24 +1,39 @@
-
 class Epargne:
-    def __init__(
-        self,
-        nom: str,
-        taux_interet: float,
-        fiscalite: float,
-        duree_min: int,
-        versement_max: float = None
-    ):
+    def __init__(self, nom: str, taux_interet: float, fiscalite: float,
+                 duree_min: int, versement_max: float = None):
+        """
+        Initialise une nouvelle instance de la classe Epargne.
+
+        Args:
+            nom (str): Nom du produit d'épargne (ex: "Livret A", "PEL").
+            taux_interet (float): Taux d'intérêt annuel du produit (ex: 0.03 pour 3%).
+            fiscalite (float): Taux de fiscalité applicable aux gains (ex: 0.30 pour 30%).
+            duree_min (int): Durée minimale de détention en mois.
+            versement_max (float, optional): Plafond de versement maximal du produit. None si pas de plafond.
+        """
         self.nom = nom
-        self.taux_interet = taux_interet  # ex : 0.03 pour 3 %
-        self.fiscalite = fiscalite        # ex : 0.17 pour 17 %
-        self.duree_min = duree_min        # en mois
-        self.versement_max = versement_max  # en € ou None = illimité
+        self.taux_interet = taux_interet
+        self.fiscalite = fiscalite
+        self.duree_min = duree_min
+        self.versement_max = versement_max
 
-    def __str__(self) -> str:
-        taux_net = self.taux_interet * (1 - self.fiscalite)
-        return (f"{self.nom} | Taux net: {taux_net*100:.2f}% | "
-                f"Durée min: {self.duree_min} mois | "
-                f"Plafond: {self.versement_max if self.versement_max else 'Aucun'} €")
+    def __str__(self):
+        """
+        Fournit une représentation textuelle conviviale de l'objet Epargne.
+        """
+        versement_max_str = f"{self.versement_max:.2f} €" if self.versement_max is not None else "Aucun"
+        return (f"Produit d'épargne: {self.nom}\n"
+                f"  Taux d'intérêt: {self.taux_interet * 100:.2f} %\n"
+                f"  Fiscalité: {self.fiscalite * 100:.2f} %\n"
+                f"  Durée minimale: {self.duree_min} mois\n"
+                f"  Plafond de versement: {versement_max_str}")
 
-    def __repr__(self) -> str:
-        return f"Epargne({self.nom}, {self.taux_interet}, {self.fiscalite}, {self.duree_min}, {self.versement_max})"
+    def __repr__(self):
+        """
+        Fournit une représentation officielle de l'objet Epargne, utile pour le débogage.
+        """
+        # Utilisation de f-strings pour une représentation claire et reproduisible
+        # Noter l'utilisation de repr() pour les chaînes afin d'inclure les guillemets
+        return (f"Epargne(nom={repr(self.nom)}, taux_interet={self.taux_interet}, "
+                f"fiscalite={self.fiscalite}, duree_min={self.duree_min}, "
+                f"versement_max={self.versement_max})")
