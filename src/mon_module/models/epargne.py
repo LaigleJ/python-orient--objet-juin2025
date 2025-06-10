@@ -1,4 +1,3 @@
-# src/mon_module/models/epargne.py
 
 import numpy as np # <-- NOUVELLE IMPORTATION
 

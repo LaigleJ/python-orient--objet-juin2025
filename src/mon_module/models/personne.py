@@ -1,6 +1,5 @@
-# src/mon_module/models/personne.py
 
-import numpy as np # <-- NOUVELLE IMPORTATION
+import numpy as np 
 
 class Personne:
     def __init__(self, nom: str, age: int, revenu_annuel: float, loyer: float,
@@ -39,8 +38,6 @@ class Personne:
         if not np.isnan(self.versement_mensuel_utilisateur): # Si versement utilisateur N'EST PAS nan
             return self.versement_mensuel_utilisateur
         else:
-            # Assurez-vous que les revenus/dépenses sont des nombres avant le calcul
-            # On considère 0 si une des valeurs est NaN pour le calcul de la capacité naturelle
             revenu_mensuel = (self.revenu_annuel if not np.isnan(self.revenu_annuel) else 0.0) / 12
             loyer = self.loyer if not np.isnan(self.loyer) else 0.0
             depenses_mensuelles = self.depenses_mensuelles if not np.isnan(self.depenses_mensuelles) else 0.0

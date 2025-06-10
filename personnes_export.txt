@@ -1,0 +1,4 @@
+nom	age	revenu_annuel	loyer	depenses_mensuelles	objectif	duree_epargne	versement_mensuel_utilisateur
+Jean	30	35000.0	700.0	400.0	0.0	0	
+Marie	45	50000.0	900.0	600.0	0.0	0	1000.0
+Pierre	25	25000.0	500.0	300.0	0.0	0	
