@@ -32,8 +32,6 @@ class Epargne:
         """
         Fournit une représentation officielle de l'objet Epargne, utile pour le débogage.
         """
-        # Utilisation de f-strings pour une représentation claire et reproduisible
-        # Noter l'utilisation de repr() pour les chaînes afin d'inclure les guillemets
         return (f"Epargne(nom={repr(self.nom)}, taux_interet={self.taux_interet}, "
                 f"fiscalite={self.fiscalite}, duree_min={self.duree_min}, "
                 f"versement_max={self.versement_max})")
