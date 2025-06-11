@@ -1,4 +1,3 @@
-
 import pandas as pd
 import numpy as np # <-- NOUVELLE IMPORTATION POUR np.nan
 

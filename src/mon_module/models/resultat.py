@@ -1,6 +1,5 @@
-
 import pandas as pd
-import numpy as np # Pour gérer np.nan si besoin, bien que moins probable ici
+import numpy as np
 
 class ResultatEpargne:
     """
@@ -27,6 +26,21 @@ class ResultatEpargne:
         self.capital_net = capital_net
         self.atteint_objectif = atteint_objectif
         self.message = message
+
+    def afficher(self):
+        """
+        Affiche les résultats de la simulation d'épargne.
+        Cette méthode est ajoutée pour satisfaire les tests.
+        Elle affiche les attributs réellement stockés par la classe.
+        """
+        print(f"Simulation pour {self.personne_nom}")
+        print(f"Produit d'épargne: {self.produit_nom} (Taux: {self.taux_interet*100:.2f}%, Fiscalité: {self.fiscalite*100:.2f}%)")
+        print(f"Versement mensuel: {self.versement_mensuel:.2f} €/mois")
+        print(f"Montant atteint après {self.duree_mois} mois: {self.capital_brut:.2f} €")
+        print(f"Montant net après fiscalité: {self.capital_net:.2f} €")
+        # Le statut de l'objectif est basé sur l'attribut atteint_objectif
+        print(f"Statut de l'objectif: {'Atteint' if self.atteint_objectif else 'Non atteint'}")
+        print(f"Message de la simulation: {self.message}")
 
     def __str__(self):
         """Fournit une représentation textuelle conviviale du résultat."""

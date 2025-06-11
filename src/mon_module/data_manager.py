@@ -1,7 +1,6 @@
-
 import pandas as pd
 import os
-import logging 
+import logging
 import numpy as np
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -67,6 +66,10 @@ def import_personnes(fichier: str) -> list[Personne]:
         df = importer_donnees_dataframe(fichier)
         df_nettoye = nettoyer_dataframe(df.copy()) # Applique le nettoyage
 
+        # --- AJOUTÉ POUR LE DÉBOGAGE ---
+        logging.info(f"DataFrame nettoyé pour les personnes contient {len(df_nettoye)} lignes.")
+        # --- FIN DE L'AJOUT ---
+
         # --- DEBUGGING : Afficher le DataFrame nettoyé avant de créer les objets Personne ---
         logging.info(f"Contenu du DataFrame nettoyé avant création des objets Personne:\n{df_nettoye.to_string()}")
         # --- FIN DEBUGGING ---
@@ -74,21 +77,17 @@ def import_personnes(fichier: str) -> list[Personne]:
         personnes = []
         for index, row in df_nettoye.iterrows():
             try:
-                # Récupérer l'objectif et la durée d'épargne avec .get() pour gérer les cas où la colonne pourrait manquer
-                # ou contenir des valeurs non numériques (bien que nettoyer_dataframe devrait gérer ça)
-                objectif = row.get('objectif', 0)  # Valeur par défaut 0 si colonne manquante
-                duree_epargne = row.get('duree_epargne', 0) # Valeur par défaut 0 si colonne manquante
+                objectif = row.get('objectif', 0)
+                duree_epargne = row.get('duree_epargne', 0)
 
-                # Convertir en int si ce n'est pas déjà fait (nettoyage devrait le faire)
-                # S'assurer que ce sont bien des nombres
                 try:
-                    objectif = float(objectif) # Utilisez float pour l'objectif
+                    objectif = float(objectif)
                 except (ValueError, TypeError):
                     logging.warning(f"Objectif invalide pour {row['nom']} (ligne {index+2}). Défini à 0.")
                     objectif = 0.0
 
                 try:
-                    duree_epargne = int(duree_epargne) # Utilisez int pour la durée
+                    duree_epargne = int(duree_epargne)
                 except (ValueError, TypeError):
                     logging.warning(f"Durée d'épargne invalide pour {row['nom']} (ligne {index+2}). Défini à 0.")
                     duree_epargne = 0
@@ -100,11 +99,9 @@ def import_personnes(fichier: str) -> list[Personne]:
                     revenu_annuel=row['revenu_annuel'],
                     loyer=row['loyer'],
                     depenses_mensuelles=row['depenses_mensuelles'],
-                    # <<< AJOUTEZ CES LIGNES MAINTENANT >>>
                     objectif=objectif,
                     duree_epargne=duree_epargne,
-                    # <<< FIN DES AJOUTS >>>
-                    versement_mensuel_utilisateur=row.get('versement_mensuel_utilisateur') # .get() pour np.nan
+                    versement_mensuel_utilisateur=row.get('versement_mensuel_utilisateur')
                 )
                 personnes.append(personne)
             except KeyError as e:
@@ -141,14 +138,19 @@ def import_epargnes(fichier: str) -> list[Epargne]:
             try:
                 epargne = Epargne(
                     nom=row['nom'],
-                    taux_interet=row['taux_interet'],
+                    taux_interet_annuel=row['taux_interet'],
+                    frais_gestion_annuels=row.get('frais_gestion_annuels', 0.0),
+                    inflation_annuelle=row.get('inflation_annuelle', 0.0),
                     fiscalite=row['fiscalite'],
                     duree_min=row['duree_min'],
-                    versement_max=row.get('versement_max') # .get() pour np.nan
+                    versement_max=row.get('versement_max')
                 )
                 epargnes.append(epargne)
             except KeyError as e:
-                logging.error(f"Colonne manquante pour la création d'objet Epargne à la ligne {index+2} : {e}. Vérifiez le fichier.")
+                logging.error(f"Colonne manquante pour la création d'objet Epargne à la ligne {index+2} : '{e}'. "
+                              f"Vérifiez que les colonnes 'nom', 'taux_interet', 'fiscalite', 'duree_min' "
+                              f"et éventuellement 'frais_gestion_annuels', 'inflation_annuelle', 'versement_max' "
+                              f"existent bien dans votre fichier CSV 'epargnes.csv'.")
                 raise ValueError(f"Données Epargne invalides : colonne '{e}' manquante.")
             except Exception as e:
                 logging.error(f"Erreur inattendue lors de la création d'un objet Epargne à la ligne {index+2} : {e}")
@@ -162,14 +164,9 @@ def import_epargnes(fichier: str) -> list[Epargne]:
 def save_personnes(personnes: list[Personne], fichier: str):
     """
     Exporte une liste d'objets Personne vers un fichier CSV, TXT ou XLSX.
-
-    Args:
-        personnes (list[Personne]): Liste d'objets Personne à exporter.
-        fichier (str): Chemin du fichier de destination.
     """
     logging.info(f"Début de l'exportation des personnes vers '{fichier}'.")
     try:
-        # Convertir la liste d'objets en un dictionnaire de listes pour créer le DataFrame
         data = {
             'nom': [p.nom for p in personnes],
             'age': [p.age for p in personnes],
@@ -199,16 +196,14 @@ def save_personnes(personnes: list[Personne], fichier: str):
 def save_epargnes(epargnes: list[Epargne], fichier: str):
     """
     Exporte une liste d'objets Epargne vers un fichier CSV, TXT ou XLSX.
-
-    Args:
-        epargnes (list[Epargne]): Liste d'objets Epargne à exporter.
-        fichier (str): Chemin du fichier de destination.
     """
     logging.info(f"Début de l'exportation des produits d'épargne vers '{fichier}'.")
     try:
         data = {
             'nom': [e.nom for e in epargnes],
-            'taux_interet': [e.taux_interet for e in epargnes],
+            'taux_interet_annuel': [e.taux_interet_annuel for e in epargnes],
+            'frais_gestion_annuels': [e.frais_gestion_annuels for e in epargnes],
+            'inflation_annuelle': [e.inflation_annuelle for e in epargnes],
             'fiscalite': [e.fiscalite for e in epargnes],
             'duree_min': [e.duree_min for e in epargnes],
             'versement_max': [e.versement_max for e in epargnes]
@@ -229,14 +224,9 @@ def save_epargnes(epargnes: list[Epargne], fichier: str):
         logging.error(f"Échec de l'exportation des produits d'épargne vers '{fichier}' : {e}")
         raise
 
-# Ajoutez cette fonction à votre fichier data_manager.py
 def save_resultats_simulation(resultats: list[ResultatEpargne], chemin_fichier: str):
     """
     Exporte une liste de ResultatEpargne vers un fichier CSV ou Excel.
-
-    Args:
-        resultats (list[ResultatEpargne]): La liste des objets ResultatEpargne à exporter.
-        chemin_fichier (str): Le chemin complet du fichier de destination (ex: 'simulations.csv', 'simulations.xlsx').
     """
     logging.info(f"Début de l'exportation des résultats de simulation vers '{chemin_fichier}'.")
 
@@ -244,7 +234,6 @@ def save_resultats_simulation(resultats: list[ResultatEpargne], chemin_fichier: 
         logging.warning("Aucun résultat de simulation à exporter. Le fichier ne sera pas créé.")
         return
 
-    # Convertir chaque ResultatEpargne en DataFrame et les concaténer
     try:
         df_results = pd.concat([res.to_dataframe() for res in resultats], ignore_index=True)
 

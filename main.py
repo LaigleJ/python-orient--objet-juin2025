@@ -1,5 +1,3 @@
-# main.py
-
 import logging
 import pandas as pd
 
@@ -14,11 +12,9 @@ from src.mon_module.core import suggestion_epargne
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # --- Tests des classes Personne et Epargne (vos tests précédents, peuvent être commentés/supprimés si vous voulez un output plus court) ---
-# Si vous avez des tests spécifiques pour ces classes, vous pouvez les laisser ici.
 # print("\n" + "="*50 + "\n")
 
 # --- Tests de la fonction calcul_interets_composes (vos tests précédents) ---
-# Si vous avez des tests spécifiques pour cette fonction, vous pouvez les laisser ici.
 # print("\n" + "="*50 + "\n")
 
 # --- Tests des fonctions d'importation et d'exportation d'objets ---
@@ -77,13 +73,13 @@ try:
     save_personnes(personnes_chargees, CHEMIN_PERSONNES_TXT_EXPORT)
     print(f"Vérification de l'export TXT :")
     personnes_rechargees_txt = import_personnes(CHEMIN_PERSONNES_TXT_EXPORT)
-    print(f"  {len(personnes_rechargees_txt)} personnes rechargées depuis le TXT exporté.")
+    print(f"   {len(personnes_rechargees_txt)} personnes rechargées depuis le TXT exporté.")
 
     print(f"\nTentative d'exportation des épargnes vers {CHEMIN_EPARGNE_XLSX_EXPORT}...")
     save_epargnes(epargnes_chargees, CHEMIN_EPARGNE_XLSX_EXPORT)
     print(f"Vérification de l'export XLSX :")
     epargnes_rechargees_xlsx = import_epargnes(CHEMIN_EPARGNE_XLSX_EXPORT)
-    print(f"  {len(epargnes_rechargees_xlsx)} produits d'épargne rechargés depuis le XLSX exporté.")
+    print(f"   {len(epargnes_rechargees_xlsx)} produits d'épargne rechargés depuis le XLSX exporté.")
 
 except (FileNotFoundError, ValueError) as e:
     logging.error(f"Une erreur générale est survenue lors de l'import/export : {e}")
@@ -97,6 +93,10 @@ try:
     # Charger les personnes et les produits d'épargne pour la simulation
     personnes_pour_simu = import_personnes(CHEMIN_PERSONNES_CSV)
     epargnes_pour_simu = import_epargnes(CHEMIN_EPARGNE_CSV)
+
+    # --- AJOUTÉ POUR LE DÉBOGAGE ---
+    logging.info(f"Nombre de personnes importées pour la simulation: {len(personnes_pour_simu)}")
+    # --- FIN DE L'AJOUT ---
 
     all_simulation_results = [] # Pour stocker tous les résultats pour un éventuel export global
     for p in personnes_pour_simu:
@@ -117,7 +117,6 @@ try:
 
     # Affichage de tous les résultats dans un DataFrame Pandas (optionnel)
     if all_simulation_results:
-        # Concaténer tous les DataFrames individuels des résultats
         df_all_results = pd.concat([s.to_dataframe() for s in all_simulation_results], ignore_index=True)
         print("\n===== Résumé de TOUS les résultats de simulation (DataFrame) =====")
         print(df_all_results.to_string()) # to_string() pour éviter la troncature en console

@@ -1,4 +1,3 @@
-
 import numpy as np 
 
 class Personne:
@@ -33,24 +32,31 @@ class Personne:
         """
         Calcule la capacité d'épargne mensuelle de la personne.
         (Revenu annuel / 12) - loyer - dépenses mensuelles.
-        Gère les cas où versement_mensuel_utilisateur est np.nan.
+        Gère les cas où versement_mensuel_utilisateur est None.
         """
-        if not np.isnan(self.versement_mensuel_utilisateur): # Si versement utilisateur N'EST PAS nan
+        # --- MODIFICATION ICI ---
+        if self.versement_mensuel_utilisateur is not None: # Vérifier si ce n'est PAS None
             return self.versement_mensuel_utilisateur
-        else:
-            revenu_mensuel = (self.revenu_annuel if not np.isnan(self.revenu_annuel) else 0.0) / 12
-            loyer = self.loyer if not np.isnan(self.loyer) else 0.0
-            depenses_mensuelles = self.depenses_mensuelles if not np.isnan(self.depenses_mensuelles) else 0.0
-            return revenu_mensuel - loyer - depenses_mensuelles
+
+        revenu_mensuel = self.revenu_annuel / 12
+        depenses_totales_mensuelles = self.loyer + self.depenses_mensuelles
+        capacite = revenu_mensuel - depenses_totales_mensuelles
+        return max(0.0, capacite) # Assurer que la capacité n'est pas négative
 
     def __str__(self):
         """
         Fournit une représentation textuelle conviviale de l'objet Personne.
         """
         capacite_str = f"{self.capacite_epargne_mensuelle:.2f} €/mois"
-        if not np.isnan(self.versement_mensuel_utilisateur):
+        if self.versement_mensuel_utilisateur is not None and not np.isnan(self.versement_mensuel_utilisateur):
             capacite_str = f"{self.versement_mensuel_utilisateur:.2f} €/mois (défini par l'utilisateur)"
         return (f"Personne: {self.nom} (âge: {self.age} ans)\n"
                 f"  Revenu annuel: {self.revenu_annuel:.2f} €, Loyer: {self.loyer:.2f} €, Dépenses: {self.depenses_mensuelles:.2f} €\n"
                 f"  Capacité d'épargne mensuelle estimée: {capacite_str}\n"
                 f"  Objectif financier: {self.objectif:.2f} € sur {self.duree_epargne} mois")
+
+    def afficher(self):
+            """
+            Affiche les informations détaillées de la personne sur la console.
+            """
+            print(self.__str__())

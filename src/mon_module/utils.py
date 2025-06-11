@@ -1,4 +1,3 @@
-
 def calcul_interets_composes(versement_annuel: float, taux_annuel: float, duree_annees: int) -> float:
     """
     Calcule le montant final d'un placement avec intérêts composés.

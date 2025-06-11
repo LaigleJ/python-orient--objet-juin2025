@@ -1,4 +1,3 @@
-
 import logging
 import numpy as np
 
@@ -28,8 +27,6 @@ def suggestion_epargne(personne: Personne, epargnes: list[Epargne]) -> list[Resu
 
     capacite_epargne_mensuelle = personne.capacite_epargne_mensuelle
 
-    # Définir les scénarios d'effort en pourcentage
-    # Inclure le versement_mensuel_utilisateur si valide
     efforts_pourcentage = [0.25, 0.50, 0.75, 1.00]
     scenarios_versement_mensuel = []
 
@@ -82,7 +79,7 @@ def suggestion_epargne(personne: Personne, epargnes: list[Epargne]) -> list[Resu
             try:
                 capital_brut = calcul_interets_composes(
                     versement_annuel=versement_annuel_effectif,
-                    taux_annuel=epargne_produit.taux_interet,
+                    taux_annuel=epargne_produit.taux_interet_annuel,
                     duree_annees=duree_epargne_annees
                 )
             except ValueError as e:
@@ -105,7 +102,7 @@ def suggestion_epargne(personne: Personne, epargnes: list[Epargne]) -> list[Resu
                 ResultatEpargne(
                     personne_nom=personne.nom,
                     produit_nom=epargne_produit.nom,
-                    taux_interet=epargne_produit.taux_interet,
+                    taux_interet=epargne_produit.taux_interet_annuel,
                     fiscalite=epargne_produit.fiscalite,
                     versement_mensuel=versement_mensuel_effectif,
                     duree_mois=personne.duree_epargne, # On garde la durée en mois de la personne
