@@ -5,7 +5,9 @@ from src.mon_module.models.personne import Personne
 from src.mon_module.models.epargne import Epargne
 from src.mon_module.models.resultat import ResultatEpargne # NOUVELLE IMPORTATION
 from src.mon_module.utils import calcul_interets_composes # Votre fonction de calcul
+from src.mon_module.utils import log_suggestion_process
 
+@log_suggestion_process
 def suggestion_epargne(personne: Personne, epargnes: list[Epargne]) -> list[ResultatEpargne]:
     """
     Génère des scénarios de simulation d'épargne pour une personne donnée avec divers produits.

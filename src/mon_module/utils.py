@@ -1,3 +1,6 @@
+import datetime
+from functools import wraps # Important pour préserver les métadonnées de la fonction décorée
+
 def calcul_interets_composes(versement_annuel: float, taux_annuel: float, duree_annees: int) -> float:
     """
     Calcule le montant final d'un placement avec intérêts composés.
@@ -24,3 +27,19 @@ def calcul_interets_composes(versement_annuel: float, taux_annuel: float, duree_
         # On applique les intérêts sur le nouveau capital
         montant_final *= (1 + taux_annuel)
     return montant_final
+
+def log_suggestion_process(func):
+    """
+    Décorateur qui affiche un message clair avant l'exécution
+    de la fonction de suggestion d'épargne.
+    """
+    @wraps(func) # Permet de préserver le nom, le module, et le docstring de 'func'
+    def wrapper(nombre_placements: int, nom_personne: str, *args, **kwargs):
+        """
+        La fonction wrapper qui ajoute la logique d'affichage.
+        """
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"{current_time} - Nous allons faire une comparaison de {nombre_placements} placements selon la situation de {nom_personne}.")
+        return func(nombre_placements, nom_personne, *args, **kwargs) # Exécute la fonction originale
+
+    return wrapper
