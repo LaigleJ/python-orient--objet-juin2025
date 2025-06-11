@@ -1,5 +1,5 @@
 nom,age,revenu_annuel,loyer,depenses_mensuelles,objectif,duree_epargne,versement_mensuel_utilisateur
-Jean,30,35000,700,400,15000,60,
+Jean,30,35000,700,400,15000,60,200
 Marie,45,50000,900,600,25000,120,1000
 Pierre,25,25000,500,300,5000,36,None
-Sophie,35,40000,800,500,0,0,
+Sophie,35,40000,800,500,0,0,1200
